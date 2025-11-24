@@ -5,16 +5,32 @@ from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
 
 # Import data (Make sure to parse dates. Consider setting index column to 'date'.)
-df = None
+df = pd.read_csv("fcc-forum-pageviews.csv")
+df = df.set_index('date')
 
 # Clean data
-df = None
 
+ds_sorted = df.sort_values(by='value')
+cutoff_1 = ds_sorted.quantile(0.025)
+cutoff_2 = ds_sorted.quantile(0.975)
+df = df[(df['value'] < cutoff_2['value'])
+                       | (df['value'] <= cutoff_1['value'])
+                      ]
+df['date'] = pd.to_datetime(df.index)
 
 def draw_line_plot():
-    # Draw line plot
-
-
+    dates = pd.date_range(start = '2016-07', end = '2020-01', freq = '6MS')
+    plt.figure(figsize=(18, 6)) 
+    plt.plot(df['date'], df['value'], color = 'red') 
+    plt.xticks(dates, rotation = 0) 
+    plt.ylim(2000, 180000)
+    plt.yticks(range(20000, 180001, 20000)) 
+    plt.xlabel("Date") 
+    plt.ylabel("Page Views")
+    plt.title("Daily freeCodeCamp Forum Page Views 5/2016-12/2019") 
+    plt.subplots_adjust(left=0.08, right=0.98, top=1, bottom=1)
+    plt.tight_layout() 
+    plt.show() 
 
 
 
