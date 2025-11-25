@@ -19,24 +19,24 @@ df = df[(df['value'] < cutoff_2['value'])
 df['date'] = pd.to_datetime(df.index)
 
 def draw_line_plot():
-    dates = pd.date_range(start = '2016-07', end = '2020-01', freq = '6MS')
-    plt.figure(figsize=(18, 6)) 
-    plt.plot(df['date'], df['value'], color = 'red') 
-    plt.xticks(dates, rotation = 0) 
-    plt.ylim(2000, 180000)
-    plt.yticks(range(20000, 180001, 20000)) 
-    plt.xlabel("Date") 
-    plt.ylabel("Page Views")
-    plt.title("Daily freeCodeCamp Forum Page Views 5/2016-12/2019") 
-    plt.subplots_adjust(left=0.08, right=0.98, top=1, bottom=1)
-    plt.tight_layout() 
-    plt.show() 
+        dates = pd.date_range(start = '2016-07', end = '2020-01', freq = '6MS')
+        fig = plt.figure(figsize=(18, 6)) 
+        plt.plot(df['date'], df['value'], color = 'red') 
+        plt.xticks(dates, rotation = 0) 
+        plt.ylim(2000, 180000)
+        plt.yticks(range(20000, 180001, 20000)) 
+        plt.xlabel("Date") 
+        plt.ylabel("Page Views")
+        plt.title("Daily freeCodeCamp Forum Page Views 5/2016-12/2019") 
+        plt.subplots_adjust(left=0.08, right=0.98, top=1, bottom=1)
+        plt.tight_layout() 
+        plt.show() 
 
 
 
-    # Save image and return fig (don't change this part)
-    fig.savefig('line_plot.png')
-    return fig
+        # Save image and return fig (don't change this part)
+        fig.savefig('line_plot.png')
+        return fig
 
 def draw_bar_plot():
     # Copy and modify data for monthly bar plot
@@ -55,9 +55,9 @@ def draw_bar_plot():
 def draw_box_plot():
     # Prepare data for box plots (this part is done!)
     df_box = df.copy()
-    df_box.reset_index(inplace=True)
-    df_box['year'] = [d.year for d in df_box.date]
-    df_box['month'] = [d.strftime('%b') for d in df_box.date]
+        df_box.reset_index(inplace=True)
+            df_box['year'] = [d.year for d in df_box.date]
+                df_box['month'] = [d.strftime('%b') for d in df_box.date]
 
     # Draw box plots (using Seaborn)
 
