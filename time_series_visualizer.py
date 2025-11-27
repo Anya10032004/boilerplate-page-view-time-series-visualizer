@@ -62,8 +62,46 @@ def draw_box_plot():
     # Draw box plots (using Seaborn)
 
     # for each year:
+    year = [2016, 2017, 2018, 2019]
+    years = {}
+    ii = 0
+    ava = []
+    for a in year:
+        if a not in  years:
+              years[a] = []
+        years[a] = df_box[df_box['year'] == a ]['value'].tolist()
+    
+    dataa = []
+    for_x_axis_two = []
+    for_x_axis_one = []
+    num = 1
+    for a,b in years.items():
+        dataa.append(b)
+        for_x_axis_two.append(a)
+        for_x_axis_one.append(num)
+        num += 1
+    
+    # for each month:
+    month = list(range(1, 13))
+    months = {}
+    ava = []
+    for a in month:
+         if a not in  months:
+              months[a] = []
+         months[a] = df_box[df_box['month'] == a]['value'].tolist()
     
 
+    dataa_m = []
+    for_x_axis_two_m = []
+    for_x_axis_one_m = []
+    num = 1
+    for a,b in months.items():
+        dataa_m.append(b)
+        for_x_axis_two_m.append(a)
+        for_x_axis_one_m.append(num)
+        num += 1
+
+    # memploting untuk menunjukan 
 
 
 
