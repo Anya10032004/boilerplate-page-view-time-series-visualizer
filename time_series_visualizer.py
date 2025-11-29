@@ -40,9 +40,21 @@ def draw_line_plot():
 
 def draw_bar_plot():
     # Copy and modify data for monthly bar plot
-    df_bar = None
+    df['year'] = df['date'].dt.year
+    df['month'] =  df['date'].dt.month
+    df_bar =  df[['value', 'year', 'month']]
 
     # Draw bar plot
+    for_graph_pivot = df_bar.pivot_table(
+    index = "month",
+    columns = "year",
+    values = "value",
+    aggfunc = "mean"
+    )
+    transpose_data = for_graph_pivot.transpose()
+
+    month =  ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August','September', 'October', 'November', 'Desember']
+    transpose_data.columns = month
 
 
 
@@ -102,6 +114,24 @@ def draw_box_plot():
         num += 1
 
     # memploting untuk menunjukan 
+    fig = plt.figure(figsize=(10, 5))
+
+    plt.subplot(1, 2, 1)
+    plt.boxplot(dataa)
+    plt.xticks(for_x_axis_one, for_x_axis_two)
+    plt.ylim(0, 180000)
+    plt.ylabel("Values")
+    plt.title("Box Plot for Each year")
+
+    plt.subplot(1, 2, 2)
+    plt.boxplot(dataa_m)
+    plt.xticks(for_x_axis_one_m, for_x_axis_two_m)
+    plt.ylim(0, 200000)
+    plt.ylabel("Values")
+    plt.title("Box Plot for Each month")
+
+    
+    plt.show()
 
 
 
