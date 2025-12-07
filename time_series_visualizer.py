@@ -46,15 +46,25 @@ def draw_bar_plot():
 
     # Draw bar plot
     for_graph_pivot = df_bar.pivot_table(
-    index = "month",
-    columns = "year",
-    values = "value",
-    aggfunc = "mean"
+         index = "month",
+         columns = "year",
+         values = "value",
+         aggfunc = "mean"
     )
     transpose_data = for_graph_pivot.transpose()
 
     month =  ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August','September', 'October', 'November', 'Desember']
     transpose_data.columns = month
+
+    fig = plt.figure(figsize=(8, 7))
+    transpose_data.plot(kind = "bar", width = 0.5)
+    plt.title("Average page views each month")
+    plt.xlabel("Years")
+    plt.ylabel("Average Page Views")
+    plt.xticks(rotation = 0)
+    plt.legend(title = "Month")
+    plt.tight_layout()
+    plt.show()
 
 
 
