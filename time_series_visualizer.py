@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sns
+# import seaborn as sns
 from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
 
@@ -28,7 +28,7 @@ def draw_line_plot():
         plt.xlabel("Date") 
         plt.ylabel("Page Views")
         plt.title("Daily freeCodeCamp Forum Page Views 5/2016-12/2019") 
-        plt.subplots_adjust(left=0.08, right=0.98, top=1, bottom=1)
+        plt.subplots_adjust(left=0.08, right=0.98, top=0.9, bottom=0.1)
         plt.tight_layout() 
         plt.show() 
 
