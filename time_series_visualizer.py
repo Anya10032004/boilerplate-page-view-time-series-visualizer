@@ -16,13 +16,15 @@ cutoff_2 = ds_sorted.quantile(0.975)
 df = df[(df['value'] < cutoff_2['value'])
                        | (df['value'] <= cutoff_1['value'])
                       ]
-df['date'] = pd.to_datetime(df.index)
+# df['date'] = pd.to_datetime(df.index)
 
 def draw_line_plot():
+        df.reset_index(inplace=True)
         dates = pd.date_range(start = '2016-07', end = '2020-01', freq = '6MS')
+        date_labels_for_xticks = dates.strftime('%Y-%m')
         fig = plt.figure(figsize=(18, 6)) 
         plt.plot(df['date'], df['value'], color = 'red') 
-        plt.xticks(dates, rotation = 0) 
+        plt.xticks(dates, date_labels_for_xticks, rotation = 0) 
         plt.ylim(2000, 180000)
         plt.yticks(range(20000, 180001, 20000)) 
         plt.xlabel("Date") 
@@ -40,6 +42,7 @@ def draw_line_plot():
 
 def draw_bar_plot():
     # Copy and modify data for monthly bar plot
+    df.reset_index(inplace=True)
     df['year'] = df['date'].dt.year
     df['month'] =  df['date'].dt.month
     df_bar =  df[['value', 'year', 'month']]
