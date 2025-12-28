@@ -4,7 +4,21 @@ import pandas as pd
 from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
 
-# Import data (Make sure to parse dates. Consider setting index column to 'date'.)
+# # Import data (Make sure to parse dates. Consider setting index column to 'date'.)
+# df = pd.read_csv("fcc-forum-pageviews.csv")
+# df = df.set_index('date')
+
+# # Clean data
+
+# ds_sorted = df.sort_values(by='value')
+# cutoff_1 = ds_sorted.quantile(0.025)
+# cutoff_2 = ds_sorted.quantile(0.975)
+# df = df[(df['value'] < cutoff_2['value'])
+#                        | (df['value'] <= cutoff_1['value'])
+#                       ]
+# # df['date'] = pd.to_datetime(df.index)
+# df.reset_index(inplace=True)
+
 df = pd.read_csv("fcc-forum-pageviews.csv")
 df = df.set_index('date')
 
@@ -80,76 +94,82 @@ def draw_bar_plot():
     return fig
 
 def draw_box_plot():
-    # Prepare data for box plots (this part is done!)
-    df_box = df.copy()
-    df_box['year'] = [d.year for d in df_box.date]
-    df_box['month'] = [d.strftime('%b') for d in df_box.date]
+  # Prepare data for box plots (this part is done!)
+  df_box = df.copy()
+  df_box['date'] = pd.to_datetime(df_box['date']) # Corrected this line
+  df_box['year'] = [d.year for d in df_box.date]
+  df_box['month'] = [d.strftime('%b') for d in df_box.date]
 
-    # Draw box plots (using Seaborn)
+  # The code above intinya hanya mengkonversi si month yang sebelumnya berupa angka ke berupa text
 
-    # for each year:
-    year = [2016, 2017, 2018, 2019]
-    years = {}
-    ii = 0
-    ava = []
-    for a in year:
-        if a not in  years:
-              years[a] = []
-        years[a] = df_box[df_box['year'] == a ]['value'].tolist()
-    
-    dataa = []
-    for_x_axis_two = []
-    for_x_axis_one = []
-    num = 1
-    for a,b in years.items():
-        dataa.append(b)
-        for_x_axis_two.append(a)
-        for_x_axis_one.append(num)
-        num += 1
-    
-    # for each month:
-    month = list(range(1, 13))
-    months = {}
-    ava = []
-    for a in month:
-         if a not in  months:
-              months[a] = []
-         months[a] = df_box[df_box['month'] == a]['value'].tolist()
-    
+  # Draw box plots (using Seaborn)
 
-    dataa_m = []
-    for_x_axis_two_m = []
-    for_x_axis_one_m = []
-    num = 1
-    for a,b in months.items():
+  # for each year:
+  years = [2016, 2017, 2018, 2019]
+  ii = 0
+  # years = {}
+  # # for a in year:
+  # #   if a not in  years:
+  # #     years[a] = []
+  # #   years[a] = df_box[df_box['year'] == a ]['value'].tolist()
+
+  # dataa = []
+  # for_x_axis_two = []
+  # for_x_axis_one = []
+  # num = 1
+  # for a,b in years.items():
+  #       dataa.append(b)
+  #       for_x_axis_two.append(a)
+  #       for_x_axis_one.append(num)
+  #       num += 1
+
+  data_y = [df_box[df_box['year'] == y]['value'].tolist() for y in years]
+
+  # for each month:
+  month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  # Use the numeric month from df_box and map to month_names or directly filter
+  months = {}
+  for i, name in enumerate(month_names):
+      months[name] = df_box[df_box['month'] == name]['value'].tolist()
+
+
+
+  dataa_m = []
+  for_x_axis_two_m = []
+  for_x_axis_one_m = []
+  num = 1
+  for a,b in months.items():
         dataa_m.append(b)
         for_x_axis_two_m.append(a)
         for_x_axis_one_m.append(num)
         num += 1
 
-    # memploting untuk menunjukan 
-    fig = plt.figure(figsize=(10, 5))
+    # memploting untuk menunjukan
+  fig = plt.figure(figsize=(10, 5))
 
-    plt.subplot(1, 2, 1)
-    plt.boxplot(dataa)
-    plt.xticks(for_x_axis_one, for_x_axis_two)
-    plt.ylim(0, 180000)
-    plt.ylabel("Values")
-    plt.title("Box Plot for Each year")
+  plt.subplot(1, 2, 1)
+  plt.boxplot(data_y)
+  plt.xticks(range(1, len(years) +1), years)
+  plt.ylim(0, 180000)
+  plt.ylabel("Page Views") # Changed label to 'Page Views'
+  plt.xlabel("Year") # Added xlabel
+  plt.title("Year-wise Box Plot (Trend)") # Changed title
 
-    plt.subplot(1, 2, 2)
-    plt.boxplot(dataa_m)
-    plt.xticks(for_x_axis_one_m, for_x_axis_two_m)
-    plt.ylim(0, 200000)
-    plt.ylabel("Values")
-    plt.title("Box Plot for Each month")
+  plt.subplot(1, 2, 2)
+  plt.boxplot(dataa_m)
+  plt.xticks(for_x_axis_one_m, for_x_axis_two_m)
+  plt.ylim(0, 200000)
+  plt.yticks(range(0, 200001, 20000))
+  plt.ylabel("Page Views") # Changed label to 'Page Views'
+  plt.xlabel("Month") # Added xlabel
+  plt.title("Month-wise Box Plot (Seasonality)") # Changed title
 
-    
-    plt.show()
+
+  plt.show()
 
 
 
 
     # Save image and return fig (don't change this part)
-    fig.savefig('box_plot.png')
-    return fig
+  fig.savefig('box_plot.png')
+  return fig
