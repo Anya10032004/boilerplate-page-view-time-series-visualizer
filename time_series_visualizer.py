@@ -27,8 +27,8 @@ df = df.set_index('date')
 ds_sorted = df.sort_values(by='value')
 cutoff_1 = ds_sorted.quantile(0.025)
 cutoff_2 = ds_sorted.quantile(0.975)
-df = df[(df['value'] < cutoff_2['value'])
-                       | (df['value'] <= cutoff_1['value'])
+df = df[(df['value'] >= cutoff_1['value'])
+                       | (df['value'] <= cutoff_2['value'])
                       ]
 # df['date'] = pd.to_datetime(df.index)
 df.reset_index(inplace=True)
@@ -75,8 +75,8 @@ def draw_bar_plot():
     month =  ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August','September', 'October', 'November', 'Desember']
     transpose_data.columns = month
 
-    fig = plt.figure(figsize=(8, 7))
-    transpose_data.plot(kind = "bar", width = 0.5)
+    fig, axx = plt.subplots(figsize=(8, 7))
+    transpose_data.plot(kind = "bar",ax = axx,  width = 0.5)
     plt.title("Average page views each month")
     plt.xlabel("Years")
     plt.ylabel("Average Page Views")
@@ -84,8 +84,6 @@ def draw_bar_plot():
     plt.legend(title = "Month")
     plt.tight_layout()
     plt.show()
-
-
 
 
 
