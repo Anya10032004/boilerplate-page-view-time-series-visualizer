@@ -4,21 +4,6 @@ import pandas as pd
 from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
 
-# # Import data (Make sure to parse dates. Consider setting index column to 'date'.)
-# df = pd.read_csv("fcc-forum-pageviews.csv")
-# df = df.set_index('date')
-
-# # Clean data
-
-# ds_sorted = df.sort_values(by='value')
-# cutoff_1 = ds_sorted.quantile(0.025)
-# cutoff_2 = ds_sorted.quantile(0.975)
-# df = df[(df['value'] < cutoff_2['value'])
-#                        | (df['value'] <= cutoff_1['value'])
-#                       ]
-# # df['date'] = pd.to_datetime(df.index)
-# df.reset_index(inplace=True)
-
 df = pd.read_csv("fcc-forum-pageviews.csv")
 df = df.set_index('date')
 
@@ -31,14 +16,16 @@ df = df[(df['value'] >= cutoff_1['value'])
                        | (df['value'] <= cutoff_2['value'])
                       ]
 # df['date'] = pd.to_datetime(df.index)
-df.reset_index(inplace=True)
+# df.reset_index(inplace=True)
 
 def draw_line_plot():
+        dff = df.copy() 
+        dff.reset_index(inplace=True)
         dates = pd.date_range(start = '2016-07', end = '2020-01', freq = '6MS')
         date_labels_for_xticks = list(map(lambda x: x.strftime('%Y-%m'), dates))
         position = list(range(0, len(date_labels_for_xticks)))
         fig = plt.figure(figsize=(18, 6)) 
-        plt.plot(df['date'], df['value'], color = 'red') 
+        plt.plot(dff['date'], dff['value'], color = 'red') 
         plt.xticks(position, date_labels_for_xticks, rotation = 0) 
         plt.ylim(2000, 180000)
         plt.yticks(range(20000, 180001, 20000)) 
@@ -57,11 +44,13 @@ def draw_line_plot():
 
 def draw_bar_plot():
     # Copy and modify data for monthly bar plot
-    datess = pd.to_datetime(df['date'])
-    df['date']  = datess
-    df['year'] = df['date'].dt.year
-    df['month'] =  df['date'].dt.month
-    df_bar =  df[['value', 'year', 'month']]
+    dff = df.copy()
+    dff.reset_index(inplace=True)
+    datess = pd.to_datetime(dff['date'])
+    dff['date']  = datess
+    dff['year'] = dff['date'].dt.year
+    dff['month'] =  dff['date'].dt.month
+    df_bar =  dff[['value', 'year', 'month']]
 
     # Draw bar plot
     for_graph_pivot = df_bar.pivot_table(
@@ -94,6 +83,7 @@ def draw_bar_plot():
 def draw_box_plot():
   # Prepare data for box plots (this part is done!)
   df_box = df.copy()
+  df_box.reset_index(inplace=True)
   df_box['date'] = pd.to_datetime(df_box['date']) # Corrected this line
   df_box['year'] = [d.year for d in df_box.date]
   df_box['month'] = [d.strftime('%b') for d in df_box.date]
