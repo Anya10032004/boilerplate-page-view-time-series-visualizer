@@ -12,14 +12,14 @@ df = df.set_index('date')
 ds_sorted = df.sort_values(by='value')
 cutoff_1 = ds_sorted.quantile(0.025)
 cutoff_2 = ds_sorted.quantile(0.975)
-df = df[(df['value'] >= cutoff_1['value'])
-                       | (df['value'] <= cutoff_2['value'])
+ds = df[(df['value'] >= cutoff_1['value'])
+                       & (df['value'] <= cutoff_2['value'])
                       ]
 # df['date'] = pd.to_datetime(df.index)
 # df.reset_index(inplace=True)
 
 def draw_line_plot():
-        dff = df.copy() 
+        dff = ds.copy() 
         dff.reset_index(inplace=True)
         dates = pd.date_range(start = '2016-07', end = '2020-01', freq = '6MS')
         date_labels_for_xticks = list(map(lambda x: x.strftime('%Y-%m'), dates))
@@ -44,7 +44,7 @@ def draw_line_plot():
 
 def draw_bar_plot():
     # Copy and modify data for monthly bar plot
-    dff = df.copy()
+    dff = ds.copy()
     dff.reset_index(inplace=True)
     datess = pd.to_datetime(dff['date'])
     dff['date']  = datess
@@ -61,7 +61,7 @@ def draw_bar_plot():
     )
     transpose_data = for_graph_pivot.transpose()
 
-    month =  ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August','September', 'October', 'November', 'Desember']
+    month =  ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August','September', 'October', 'November', 'December']
     transpose_data.columns = month
 
     fig, axx = plt.subplots(figsize=(8, 7))
@@ -82,7 +82,7 @@ def draw_bar_plot():
 
 def draw_box_plot():
   # Prepare data for box plots (this part is done!)
-  df_box = df.copy()
+  df_box = ds.copy()
   df_box.reset_index(inplace=True)
   df_box['date'] = pd.to_datetime(df_box['date']) # Corrected this line
   df_box['year'] = [d.year for d in df_box.date]
@@ -138,7 +138,8 @@ def draw_box_plot():
   plt.subplot(1, 2, 1)
   plt.boxplot(data_y)
   plt.xticks(range(1, len(years) +1), years)
-  plt.ylim(0, 180000)
+  plt.ylim(0, 200000)
+  plt.yticks(range(0, 200001, 20000))
   plt.ylabel("Page Views") # Changed label to 'Page Views'
   plt.xlabel("Year") # Added xlabel
   plt.title("Year-wise Box Plot (Trend)") # Changed title
