@@ -15,26 +15,27 @@ cutoff_2 = ds_sorted.quantile(0.975)
 ds = df[(df['value'] >= cutoff_1['value'])
                        & (df['value'] <= cutoff_2['value'])
                       ]
+
 # df['date'] = pd.to_datetime(df.index)
 # df.reset_index(inplace=True)
 
 def draw_line_plot():
-        dff = ds.copy() 
+        dff = ds.copy()
         dff.reset_index(inplace=True)
         dates = pd.date_range(start = '2016-07', end = '2020-01', freq = '6MS')
         date_labels_for_xticks = list(map(lambda x: x.strftime('%Y-%m'), dates))
         position = list(range(0, len(date_labels_for_xticks)))
-        fig = plt.figure(figsize=(18, 6)) 
-        plt.plot(dff['date'], dff['value'], color = 'red') 
-        plt.xticks(position, date_labels_for_xticks, rotation = 0) 
+        fig = plt.figure(figsize=(18, 6))
+        plt.plot(dff['date'], dff['value'], color = 'red')
+        plt.xticks(position, date_labels_for_xticks, rotation = 0)
         plt.ylim(2000, 180000)
-        plt.yticks(range(20000, 180001, 20000)) 
-        plt.xlabel("Date") 
+        plt.yticks(range(20000, 180001, 20000))
+        plt.xlabel("Date")
         plt.ylabel("Page Views")
-        plt.title("Daily freeCodeCamp Forum Page Views 5/2016-12/2019") 
+        plt.title("Daily freeCodeCamp Forum Page Views 5/2016-12/2019")
         plt.subplots_adjust(left=0.08, right=0.98, top=0.9, bottom=0.1)
-        plt.tight_layout() 
-        plt.show() 
+        plt.tight_layout()
+        plt.show()
 
 
 
