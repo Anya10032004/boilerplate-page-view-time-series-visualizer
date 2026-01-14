@@ -3,6 +3,7 @@ import pandas as pd
 # import seaborn as sns
 from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
+import seaborn as sns
 
 df = pd.read_csv("fcc-forum-pageviews.csv")
 df = df.set_index('date')
@@ -12,7 +13,7 @@ df = df.set_index('date')
 ds_sorted = df.sort_values(by='value')
 cutoff_1 = ds_sorted.quantile(0.025)
 cutoff_2 = ds_sorted.quantile(0.975)
-ds = df[(df['value'] >= cutoff_1['value'])
+df = df[(df['value'] >= cutoff_1['value'])
                        & (df['value'] <= cutoff_2['value'])
                       ]
 
@@ -20,7 +21,7 @@ ds = df[(df['value'] >= cutoff_1['value'])
 # df.reset_index(inplace=True)
 
 def draw_line_plot():
-        dff = ds.copy()
+        dff = df.copy()
         dff.reset_index(inplace=True)
         dates = pd.date_range(start = '2016-07', end = '2020-01', freq = '6MS')
         date_labels_for_xticks = list(map(lambda x: x.strftime('%Y-%m'), dates))
@@ -45,7 +46,7 @@ def draw_line_plot():
 
 def draw_bar_plot():
     # Copy and modify data for monthly bar plot
-    dff = ds.copy()
+    dff = df.copy()
     dff.reset_index(inplace=True)
     datess = pd.to_datetime(dff['date'])
     dff['date']  = datess
@@ -83,7 +84,7 @@ def draw_bar_plot():
 
 def draw_box_plot():
   # Prepare data for box plots (this part is done!)
-  df_box = ds.copy()
+  df_box = df.copy()
   df_box.reset_index(inplace=True)
   df_box['date'] = pd.to_datetime(df_box['date']) # Corrected this line
   df_box['year'] = [d.year for d in df_box.date]
@@ -137,7 +138,12 @@ def draw_box_plot():
   fig = plt.figure(figsize=(10, 5))
 
   plt.subplot(1, 2, 1)
-  plt.boxplot(data_y)
+  # plt.boxplot(data_y)
+  sns.boxplot(
+      x = 'year',
+      y = 'value',
+      data = df_box
+      )
   plt.xticks(range(1, len(years) +1), years)
   plt.ylim(0, 200000)
   plt.yticks(range(0, 200001, 20000))
@@ -146,7 +152,13 @@ def draw_box_plot():
   plt.title("Year-wise Box Plot (Trend)") # Changed title
 
   plt.subplot(1, 2, 2)
-  plt.boxplot(dataa_m)
+  # plt.boxplot(dataa_m)
+  sns.boxplot(
+      x = 'month',
+      y = 'value',
+      data = df_box,
+      order = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      )
   plt.xticks(for_x_axis_one_m, for_x_axis_two_m)
   plt.ylim(0, 200000)
   plt.yticks(range(0, 200001, 20000))
